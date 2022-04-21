@@ -48,7 +48,7 @@ public class ArticleServiceImpl implements ArticleService {
         return articleVoList;
     }
 
-    private ArticleVo copy(Article article) {
+    private ArticleVo copy(Article article, boolean isTag, boolean isAuthor) {
         ArticleVo articleVo = new ArticleVo();
         BeanUtils.copyProperties(article, articleVo);
 
