@@ -7,9 +7,12 @@ import com.tlw.blog.pojo.Article;
 import com.tlw.blog.vo.ArticleVo;
 import com.tlw.blog.vo.PageParams;
 import com.tlw.blog.vo.Result;
+import org.joda.time.DateTime;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -32,13 +35,24 @@ public class ArticleServiceImpl implements ArticleService {
 
         List<ArticleVo>  articleVoList= copyList(records);
 
-
         return Result.success(articleVoList);
     }
 
     private List<ArticleVo> copyList(List<Article> records) {
-        return null;
+        List<ArticleVo> articleVoList = new ArrayList<>();
+
+        for (Article record: records) {
+            articleVoList.add(copy(record));
+        }
+
+        return articleVoList;
     }
 
-    private
+    private ArticleVo copy(Article article) {
+        ArticleVo articleVo = new ArticleVo();
+        BeanUtils.copyProperties(article, articleVo);
+
+        articleVo.setCreateDate(new DateTime(article.getCreateDate()).toString("yyyy-MM-dd HH:mm"));
+        return articleVo;
+    }
 }

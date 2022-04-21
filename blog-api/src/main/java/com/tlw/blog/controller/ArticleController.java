@@ -4,13 +4,10 @@ import com.tlw.blog.service.ArticleService;
 import com.tlw.blog.vo.PageParams;
 import com.tlw.blog.vo.Result;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("articles")
+@RequestMapping("/articles")
 public class ArticleController {
 
     @Autowired
@@ -19,8 +16,8 @@ public class ArticleController {
     @PostMapping
     public Result articles(@RequestBody PageParams pageParams) {
 
-
         return articleService.listArticlesPage(pageParams);
     }
+
 }
 
