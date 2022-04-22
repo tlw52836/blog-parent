@@ -1,5 +1,6 @@
 package com.tlw.blog.service;
 
+import com.tlw.blog.vo.Result;
 import com.tlw.blog.vo.TagVo;
 
 import java.util.List;
@@ -12,4 +13,11 @@ public interface TagService {
      * @return
      */
     List<TagVo> findTagsByArticleId(Long articleId);
+
+    /**
+     * 查询最热标签
+     * @param limit
+     * @return
+     */
+    Result hots(int limit);
 }

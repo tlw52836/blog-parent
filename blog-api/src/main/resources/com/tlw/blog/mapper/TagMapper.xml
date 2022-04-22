@@ -12,4 +12,16 @@
 
     </select>
 
+    <select id="findHotsTagIds" parameterType="Integer" resultType="Long">
+        select tag_id from ms_article_tag group by tag_id order by count(*) desc limit #{limit};
+    </select>
+
+    <select id="findTagsByTagIds" parameterType="list" resultType="com.tlw.blog.pojo.Tag">
+        select id, tag_name from ms_tag
+        where id in
+        <foreach collection="tagIds" item="tagId" separator="," open="(" close=")">
+            #{tagId}
+        </foreach>
+    </select>
+
 </mapper>
