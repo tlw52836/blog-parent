@@ -1,9 +1,12 @@
-package com.tlw.blog.service;
+package com.tlw.blog.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.tlw.blog.mapper.ArticleMapper;
 import com.tlw.blog.pojo.Article;
+import com.tlw.blog.service.ArticleService;
+import com.tlw.blog.service.SysUserService;
+import com.tlw.blog.service.TagService;
 import com.tlw.blog.vo.ArticleVo;
 import com.tlw.blog.vo.PageParams;
 import com.tlw.blog.vo.Result;
@@ -21,6 +24,12 @@ public class ArticleServiceImpl implements ArticleService {
     @Autowired
     private ArticleMapper articleMapper;
 
+    @Autowired
+    private TagService tagService;
+
+    @Autowired
+    private SysUserService sysUserService;
+
     @Override
     public Result listArticlesPage(PageParams pageParams) {
         /**
@@ -33,16 +42,16 @@ public class ArticleServiceImpl implements ArticleService {
         Page<Article> articlePage = articleMapper.selectPage(page, queryWrapper);
         List<Article> records = articlePage.getRecords();
 
-        List<ArticleVo>  articleVoList= copyList(records);
+        List<ArticleVo>  articleVoList= copyList(records, true, true);
 
         return Result.success(articleVoList);
     }
 
-    private List<ArticleVo> copyList(List<Article> records) {
+    private List<ArticleVo> copyList(List<Article> records,boolean isTag, boolean isAuthor) {
         List<ArticleVo> articleVoList = new ArrayList<>();
 
         for (Article record: records) {
-            articleVoList.add(copy(record));
+            articleVoList.add(copy(record, isTag, isAuthor));
         }
 
         return articleVoList;
@@ -53,6 +62,16 @@ public class ArticleServiceImpl implements ArticleService {
         BeanUtils.copyProperties(article, articleVo);
 
         articleVo.setCreateDate(new DateTime(article.getCreateDate()).toString("yyyy-MM-dd HH:mm"));
+        //并不是所有的接口都需要标签和作者信息的
+        if (isTag) {
+            Long articleId = article.getId();
+            articleVo.setTags(tagService.findTagsByArticleId(articleId));
+        }
+
+        if (isAuthor) {
+            Long authorId = article.getAuthorId();
+            articleVo.setAuthor(sysUserService.findUserById(authorId).getNickname());
+        }
         return articleVo;
     }
 }
