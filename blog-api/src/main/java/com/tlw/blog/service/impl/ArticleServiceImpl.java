@@ -3,7 +3,8 @@ package com.tlw.blog.service.impl;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.tlw.blog.mapper.ArticleMapper;
-import com.tlw.blog.pojo.Article;
+import com.tlw.blog.mapper.dos.Archives;
+import com.tlw.blog.mapper.entity.Article;
 import com.tlw.blog.service.ArticleService;
 import com.tlw.blog.service.SysUserService;
 import com.tlw.blog.service.TagService;
@@ -45,6 +46,39 @@ public class ArticleServiceImpl implements ArticleService {
         List<ArticleVo>  articleVoList= copyList(records, true, true);
 
         return Result.success(articleVoList);
+    }
+
+    @Override
+    public Result hotArticles(int limit) {
+        //select id, title from ms_article order by view_counts desc limit 5
+        LambdaQueryWrapper<Article> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.orderByDesc(Article::getViewCounts);
+        queryWrapper.select(Article::getId, Article::getTitle);
+        queryWrapper.last("limit " + limit);
+
+        List<Article> articles = articleMapper.selectList(queryWrapper);
+
+        return Result.success(copyList(articles, false, false));
+    }
+
+    @Override
+    public Result newArticles(int limit) {
+        //select id, title from ms_article order by create_date desc limit 5
+        LambdaQueryWrapper<Article> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.orderByDesc(Article::getCreateDate);
+        queryWrapper.select(Article::getId, Article::getTitle);
+        queryWrapper.last("limit " + limit);
+
+        List<Article> articles = articleMapper.selectList(queryWrapper);
+
+        return Result.success(copyList(articles, false, false));
+    }
+
+    //文章归档
+    @Override
+    public Result listArchives() {
+        List<Archives> archives = articleMapper.listArchives();
+        return Result.success(archives);
     }
 
     private List<ArticleVo> copyList(List<Article> records,boolean isTag, boolean isAuthor) {

@@ -1,4 +1,4 @@
-package com.tlw.blog.pojo;
+package com.tlw.blog.mapper.entity;
 
 import lombok.Data;
 

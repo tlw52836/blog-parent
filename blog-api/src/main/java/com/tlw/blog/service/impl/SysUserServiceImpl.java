@@ -1,7 +1,7 @@
 package com.tlw.blog.service.impl;
 
 import com.tlw.blog.mapper.SysUserMapper;
-import com.tlw.blog.pojo.SysUser;
+import com.tlw.blog.mapper.entity.SysUser;
 import com.tlw.blog.service.SysUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
