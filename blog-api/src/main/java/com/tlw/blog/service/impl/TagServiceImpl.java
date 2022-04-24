@@ -1,7 +1,7 @@
 package com.tlw.blog.service.impl;
 
 import com.tlw.blog.mapper.TagMapper;
-import com.tlw.blog.mapper.entity.Tag;
+import com.tlw.blog.mapper.pojo.Tag;
 import com.tlw.blog.service.TagService;
 import com.tlw.blog.vo.Result;
 import com.tlw.blog.vo.TagVo;

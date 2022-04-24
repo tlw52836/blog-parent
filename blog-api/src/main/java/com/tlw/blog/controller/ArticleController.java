@@ -1,7 +1,7 @@
 package com.tlw.blog.controller;
 
 import com.tlw.blog.service.ArticleService;
-import com.tlw.blog.vo.PageParams;
+import com.tlw.blog.vo.params.PageParams;
 import com.tlw.blog.vo.Result;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;

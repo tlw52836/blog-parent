@@ -1,4 +1,4 @@
-package com.tlw.blog.vo;
+package com.tlw.blog.vo.params;
 
 import lombok.Data;
 

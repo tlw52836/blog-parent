@@ -2,7 +2,7 @@ package com.tlw.blog.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.tlw.blog.mapper.dos.Archives;
-import com.tlw.blog.mapper.entity.Article;
+import com.tlw.blog.mapper.pojo.Article;
 
 import java.util.List;
 
