@@ -43,7 +43,7 @@ public class LoginServiceImpl implements LoginService {
 
         String account = loginParams.getAccount();
         String password = loginParams.getPassword();
-        if (StringUtils.isEmpty(account) || StringUtils.isEmpty(password)) {
+        if (StringUtils.isBlank(account) || StringUtils.isBlank(password)) {
             return Result.fail(ErrorCode.PARAMS_ERROR.getCode(), ErrorCode.PARAMS_ERROR.getMsg());
         }
 
@@ -72,12 +72,18 @@ public class LoginServiceImpl implements LoginService {
         }
 
         String userJson = redisTemplate.opsForValue().get("TOKEN_" + token);
-        if (StringUtils.isEmpty(userJson)) {
+        if (StringUtils.isBlank(userJson)) {
             return null;
         }
 
         SysUser sysUser = JSON.parseObject(userJson, SysUser.class);
 
         return sysUser;
+    }
+
+    @Override
+    public Result logout(String token) {
+        redisTemplate.delete("TOKEN_"+token);
+        return Result.success(null);
     }
 }
