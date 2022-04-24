@@ -10,16 +10,19 @@ import com.tlw.blog.vo.Result;
 import com.tlw.blog.vo.params.LoginParams;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import org.apache.commons.codec.digest.DigestUtils;
 
 
+import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 @Service
 public class LoginServiceImpl implements LoginService {
     @Autowired
+    @Lazy
     private SysUserService sysUserService;
 
     @Autowired
@@ -40,8 +43,8 @@ public class LoginServiceImpl implements LoginService {
 
         String account = loginParams.getAccount();
         String password = loginParams.getPassword();
-        if (StringUtils.isBlank(account) || StringUtils.isBlank(password)) {
-            return Result.fail(ErrorCode.PARAMS_ERROR.getCode(), "参数不合法");
+        if (StringUtils.isEmpty(account) || StringUtils.isEmpty(password)) {
+            return Result.fail(ErrorCode.PARAMS_ERROR.getCode(), ErrorCode.PARAMS_ERROR.getMsg());
         }
 
         password = DigestUtils.md5Hex(password + slat);
@@ -55,5 +58,26 @@ public class LoginServiceImpl implements LoginService {
 
 
         return Result.success(token);
+    }
+
+    @Override
+    public SysUser checkToken(String token) {
+        if (StringUtils.isEmpty(token)) {
+            return null;
+        }
+
+        Map<String, Object> stringObjectMap = JWTUtils.checkToken(token);
+        if (stringObjectMap == null) {
+            return null;
+        }
+
+        String userJson = redisTemplate.opsForValue().get("TOKEN_" + token);
+        if (StringUtils.isEmpty(userJson)) {
+            return null;
+        }
+
+        SysUser sysUser = JSON.parseObject(userJson, SysUser.class);
+
+        return sysUser;
     }
 }
