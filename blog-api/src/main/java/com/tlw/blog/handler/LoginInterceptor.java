@@ -3,6 +3,7 @@ package com.tlw.blog.handler;
 import com.alibaba.fastjson.JSON;
 import com.tlw.blog.mapper.pojo.SysUser;
 import com.tlw.blog.service.TokenService;
+import com.tlw.blog.utils.UserThreadLocal;
 import com.tlw.blog.vo.ErrorCode;
 import com.tlw.blog.vo.Result;
 import lombok.extern.slf4j.Slf4j;
@@ -56,7 +57,14 @@ public class LoginInterceptor implements HandlerInterceptor {
             return false;
         }
         //是登录状态，放行
-
+        //登录验证成功，放行
+        //我希望在controller中 直接获取用户的信息 怎么获取?
+        UserThreadLocal.put(sysUser);
         return true;
+    }
+
+    @Override
+    public void afterCompletion(HttpServletRequest request, HttpServletResponse response, Object handler, Exception ex) throws Exception {
+        UserThreadLocal.remove();
     }
 }
