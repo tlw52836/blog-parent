@@ -1,4 +1,4 @@
-package com.tlw.blog.mapper.dos;
+package com.tlw.blog.vo;
 
 import lombok.Data;
 

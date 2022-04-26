@@ -3,7 +3,7 @@ package com.tlw.blog.service.impl;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.tlw.blog.mapper.ArticleMapper;
-import com.tlw.blog.mapper.dos.Archives;
+import com.tlw.blog.vo.Archives;
 import com.tlw.blog.mapper.pojo.Article;
 import com.tlw.blog.service.ArticleService;
 import com.tlw.blog.service.SysUserService;

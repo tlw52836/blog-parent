@@ -5,7 +5,7 @@
 <mapper namespace="com.tlw.blog.mapper.ArticleMapper">
 
 
-    <select id="listArchives" resultType="com.tlw.blog.mapper.dos.Archives">
+    <select id="listArchives" resultType="com.tlw.blog.vo.Archives">
         select year(FROM_UNIXTIME(create_date/1000)) year,month(FROM_UNIXTIME(create_date/1000)) month, count(*) count
         from ms_article
         group by year,month;
