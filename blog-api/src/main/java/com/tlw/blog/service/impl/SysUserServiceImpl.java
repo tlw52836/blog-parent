@@ -3,13 +3,12 @@ package com.tlw.blog.service.impl;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.tlw.blog.mapper.SysUserMapper;
 import com.tlw.blog.mapper.pojo.SysUser;
-import com.tlw.blog.service.LoginService;
 import com.tlw.blog.service.SysUserService;
+import com.tlw.blog.service.TokenService;
 import com.tlw.blog.vo.ErrorCode;
 import com.tlw.blog.vo.LoginUserVo;
 import com.tlw.blog.vo.Result;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -18,8 +17,7 @@ public class SysUserServiceImpl implements SysUserService {
     private SysUserMapper sysUserMapper;
 
     @Autowired
-    @Lazy
-    private LoginService loginService;
+    private TokenService tokenService;
 
 
     @Override
@@ -51,11 +49,12 @@ public class SysUserServiceImpl implements SysUserService {
          * 2. 如果校验失败：返回错误
          * 3. 如果校验成功：返回对应结果 LoginUserVo
          */
-        SysUser sysUser = loginService.checkToken(token);
+        SysUser sysUser = tokenService.checkToken(token);
         if (sysUser == null) {
             Result.fail(ErrorCode.TOKEN_ERROR.getCode(), ErrorCode.TOKEN_ERROR.getMsg());
         }
 
+        System.out.println("=======>" + sysUser);
         LoginUserVo loginUserVo = new LoginUserVo();
         loginUserVo.setId(sysUser.getId());
         loginUserVo.setAccount(sysUser.getAccount());
