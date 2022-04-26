@@ -59,4 +59,12 @@ public class LoginServiceImpl implements LoginService {
         redisTemplate.delete("TOKEN_"+token);
         return Result.success(null);
     }
+
+    @Override
+    public Result register(LoginParams loginParams) {
+        /**
+         *
+         */
+        return null;
+    }
 }

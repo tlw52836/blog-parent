@@ -27,9 +27,7 @@ public class TagServiceImpl implements TagService {
 
     @Override
     public Result hots(int limit) {
-        /**
-         * 标签所拥有的文章数量最多 最热标签
-         */
+        //标签所拥有的文章数量最多 最热标签
         List<Long> tagIds = tagMapper.findHotsTagIds(limit);
         if (CollectionUtils.isEmpty(tagIds)) {
             return Result.success(Collections.emptyList());
