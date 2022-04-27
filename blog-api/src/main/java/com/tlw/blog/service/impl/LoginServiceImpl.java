@@ -41,7 +41,7 @@ public class LoginServiceImpl implements LoginService {
 
         String account = loginParams.getAccount();
         String password = loginParams.getPassword();
-        if (StringUtils.isBlank(account) || StringUtils.isBlank(password)) {
+        if (StringUtils.isEmpty(account) || StringUtils.isEmpty(password)) {
             return Result.fail(ErrorCode.PARAMS_ERROR.getCode(), ErrorCode.PARAMS_ERROR.getMsg());
         }
 
@@ -77,7 +77,7 @@ public class LoginServiceImpl implements LoginService {
         String account = loginParams.getAccount();
         String password = loginParams.getPassword();
         String nickname = loginParams.getNickname();
-        if (StringUtils.isBlank(account) || StringUtils.isBlank(password) || StringUtils.isBlank(nickname)) {
+        if (StringUtils.isEmpty(account) || StringUtils.isEmpty(password) || StringUtils.isEmpty(nickname)) {
             return Result.fail(ErrorCode.PARAMS_ERROR.getCode(), ErrorCode.PARAMS_ERROR.getMsg());
         }
 

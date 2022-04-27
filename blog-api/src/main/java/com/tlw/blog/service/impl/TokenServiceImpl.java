@@ -18,7 +18,7 @@ public class TokenServiceImpl implements TokenService {
 
     @Override
     public SysUser checkToken(String token) {
-        if (StringUtils.isBlank(token)) {
+        if (StringUtils.isEmpty(token)) {
             return null;
         }
 
@@ -28,7 +28,7 @@ public class TokenServiceImpl implements TokenService {
         }
 
         String userJson = redisTemplate.opsForValue().get("TOKEN_" + token);
-        if (StringUtils.isBlank(userJson)) {
+        if (StringUtils.isEmpty(userJson)) {
             return null;
         }
 
