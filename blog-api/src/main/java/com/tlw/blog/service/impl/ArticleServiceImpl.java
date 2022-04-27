@@ -3,14 +3,11 @@ package com.tlw.blog.service.impl;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.tlw.blog.mapper.ArticleMapper;
-import com.tlw.blog.vo.Archives;
+import com.tlw.blog.mapper.pojo.Category;
+import com.tlw.blog.service.*;
+import com.tlw.blog.vo.*;
 import com.tlw.blog.mapper.pojo.Article;
-import com.tlw.blog.service.ArticleService;
-import com.tlw.blog.service.SysUserService;
-import com.tlw.blog.service.TagService;
-import com.tlw.blog.vo.ArticleVo;
 import com.tlw.blog.vo.params.PageParams;
-import com.tlw.blog.vo.Result;
 import org.joda.time.DateTime;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,6 +28,12 @@ public class ArticleServiceImpl implements ArticleService {
     @Autowired
     private SysUserService sysUserService;
 
+    @Autowired
+    private CategoryService categoryService;
+
+    @Autowired
+    private ArticleBodyService articleBodyService;
+
     @Override
     public Result listArticlesPage(PageParams pageParams) {
         /**
@@ -43,7 +46,7 @@ public class ArticleServiceImpl implements ArticleService {
         Page<Article> articlePage = articleMapper.selectPage(page, queryWrapper);
         List<Article> records = articlePage.getRecords();
 
-        List<ArticleVo>  articleVoList= copyList(records, true, true);
+        List<ArticleVo>  articleVoList= copyList(records, true, true, false, false);
 
         return Result.success(articleVoList);
     }
@@ -58,7 +61,7 @@ public class ArticleServiceImpl implements ArticleService {
 
         List<Article> articles = articleMapper.selectList(queryWrapper);
 
-        return Result.success(copyList(articles, false, false));
+        return Result.success(copyList(articles, false, false, false, false));
     }
 
     @Override
@@ -71,7 +74,7 @@ public class ArticleServiceImpl implements ArticleService {
 
         List<Article> articles = articleMapper.selectList(queryWrapper);
 
-        return Result.success(copyList(articles, false, false));
+        return Result.success(copyList(articles, false, false, false, false));
     }
 
     //文章归档
@@ -81,17 +84,25 @@ public class ArticleServiceImpl implements ArticleService {
         return Result.success(archives);
     }
 
-    private List<ArticleVo> copyList(List<Article> records,boolean isTag, boolean isAuthor) {
+
+    @Override
+    public Result findArticleById(Long articleId) {
+        Article article = articleMapper.selectById(articleId);
+        ArticleVo articleVo = copy(article, true, true, true, true);
+        return Result.success(articleVo);
+    }
+
+    private List<ArticleVo> copyList(List<Article> records,boolean isTag, boolean isAuthor, boolean  isCategory, boolean isBody) {
         List<ArticleVo> articleVoList = new ArrayList<>();
 
         for (Article record: records) {
-            articleVoList.add(copy(record, isTag, isAuthor));
+            articleVoList.add(copy(record, isTag, isAuthor, isCategory, isBody));
         }
 
         return articleVoList;
     }
 
-    private ArticleVo copy(Article article, boolean isTag, boolean isAuthor) {
+    private ArticleVo copy(Article article, boolean isTag, boolean isAuthor, boolean  isCategory, boolean isBody) {
         ArticleVo articleVo = new ArticleVo();
         BeanUtils.copyProperties(article, articleVo);
 
@@ -106,6 +117,18 @@ public class ArticleServiceImpl implements ArticleService {
             Long authorId = article.getAuthorId();
             articleVo.setAuthor(sysUserService.findUserById(authorId).getNickname());
         }
+
+        if (isCategory) {
+            CategoryVo categoryVo = categoryService.findCategoryById(article.getCategoryId());
+            articleVo.setCategory(categoryVo);
+        }
+
+        if (isBody) {
+            ArticleBodyVo articleBodyVo = articleBodyService.findArticleBodyById(article.getBodyId());
+            articleVo.setBody(articleBodyVo);
+        }
+
         return articleVo;
     }
+
 }

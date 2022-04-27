@@ -29,6 +29,6 @@ public class ArticleVo {
 
     private List<TagVo> tags;
 
-    private List<CategoryVo> categorys;
+    private CategoryVo category;
 
 }
