@@ -34,6 +34,9 @@ public class ArticleServiceImpl implements ArticleService {
     @Autowired
     private ArticleBodyService articleBodyService;
 
+    @Autowired
+    private ThreadService threadService;
+
     @Override
     public Result listArticlesPage(PageParams pageParams) {
         /**
@@ -89,6 +92,12 @@ public class ArticleServiceImpl implements ArticleService {
     public Result findArticleById(Long articleId) {
         Article article = articleMapper.selectById(articleId);
         ArticleVo articleVo = copy(article, true, true, true, true);
+        /**
+         * 查看文章后，新增阅读次数
+         * 查看玩文章后本应该返回数据了，这时做了一个更新操作（增删改操作加写锁，查询操作加读锁），使得阅读数更新操作需要等待
+         * 可以把阅读数更新操作扔到线程池中去执行，和主线程就相关了
+         */
+        threadService.updateViewCount(articleMapper, article);
         return Result.success(articleVo);
     }
 
