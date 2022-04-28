@@ -1,6 +1,7 @@
 package com.tlw.blog.service;
 
 import com.tlw.blog.vo.Result;
+import com.tlw.blog.vo.params.CommentParam;
 
 public interface CommentsService {
 
@@ -11,4 +12,11 @@ public interface CommentsService {
      * @return
      */
     Result commentsByArticleId(Long articleId);
+
+    /**
+     * 插入评论
+     * @param commentParam
+     * @return
+     */
+    Result comment(CommentParam commentParam);
 }

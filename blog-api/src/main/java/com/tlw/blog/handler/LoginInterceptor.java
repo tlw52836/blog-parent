@@ -36,14 +36,16 @@ public class LoginInterceptor implements HandlerInterceptor {
         }
 
         String token = request.getHeader("Authorization");
+        System.out.println(token.length());
         log.info("=================request start===========================");
         String requestURI = request.getRequestURI();
         log.info("request uri:{}",requestURI);
         log.info("request method:{}",request.getMethod());
         log.info("token:{}", token);
         log.info("=================request end===========================");
+        System.out.println(token);
 
-        if (token == null){
+        if (token == null || token.equals("undefined")){
             Result result = Result.fail(ErrorCode.NO_LOGIN.getCode(), "未登录");
             response.setContentType("application/json;charset=utf-8");
             response.getWriter().print(JSON.toJSONString(result));

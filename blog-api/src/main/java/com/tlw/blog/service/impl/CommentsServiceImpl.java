@@ -6,9 +6,11 @@ import com.tlw.blog.mapper.pojo.Comment;
 import com.tlw.blog.mapper.pojo.SysUser;
 import com.tlw.blog.service.CommentsService;
 import com.tlw.blog.service.SysUserService;
+import com.tlw.blog.utils.UserThreadLocal;
 import com.tlw.blog.vo.CommentVo;
 import com.tlw.blog.vo.Result;
 import com.tlw.blog.vo.UserVo;
+import com.tlw.blog.vo.params.CommentParam;
 import org.apache.catalina.User;
 import org.joda.time.DateTime;
 import org.springframework.beans.BeanUtils;
@@ -33,6 +35,27 @@ public class CommentsServiceImpl implements CommentsService {
         queryWrapper.eq(Comment::getLevel,1);
         List<Comment> comments = commentMapper.selectList(queryWrapper);
         return Result.success(copyList(comments));
+    }
+
+    @Override
+    public Result comment(CommentParam commentParam) {
+        SysUser sysUser = UserThreadLocal.get();
+        Comment comment = new Comment();
+        comment.setArticleId(commentParam.getArticleId());
+        comment.setAuthorId(sysUser.getId());
+        comment.setContent(commentParam.getContent());
+        comment.setCreateDate(System.currentTimeMillis());
+        Long parent = commentParam.getParent();
+        if (parent == null || parent == 0) {
+            comment.setLevel(1);
+        }else{
+            comment.setLevel(2);
+        }
+        comment.setParentId(parent == null ? 0 : parent);
+        Long toUserId = commentParam.getToUserId();
+        comment.setToUid(toUserId == null ? 0 : toUserId);
+        this.commentMapper.insert(comment);
+        return Result.success(null);
     }
 
 
