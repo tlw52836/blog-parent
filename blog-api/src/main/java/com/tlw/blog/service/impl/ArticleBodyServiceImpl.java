@@ -18,7 +18,6 @@ public class ArticleBodyServiceImpl implements ArticleBodyService {
         ArticleBody articleBody = articleBodyMapper.selectById(bodyId);
         ArticleBodyVo articleBodyVo = new ArticleBodyVo();
         BeanUtils.copyProperties(articleBody, articleBodyVo);
-
         return articleBodyVo;
     }
 }

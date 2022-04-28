@@ -27,8 +27,8 @@ public class SysUserServiceImpl implements SysUserService {
             sysUser = new SysUser();
             sysUser.setNickname("Mr Tao");
         }
-
-        return sysUserMapper.selectById(id);
+        
+        return sysUser;
     }
 
     @Override
