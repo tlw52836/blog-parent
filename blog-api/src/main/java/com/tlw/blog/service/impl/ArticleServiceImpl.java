@@ -3,13 +3,10 @@ package com.tlw.blog.service.impl;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.tlw.blog.dao.ArticleMapper;
-import com.tlw.blog.dao.pojo.ArticleBody;
-import com.tlw.blog.dao.pojo.ArticleTag;
-import com.tlw.blog.dao.pojo.SysUser;
+import com.tlw.blog.dao.pojo.*;
 import com.tlw.blog.service.*;
 import com.tlw.blog.utils.UserThreadLocal;
 import com.tlw.blog.vo.*;
-import com.tlw.blog.dao.pojo.Article;
 import com.tlw.blog.vo.params.ArticleParam;
 import com.tlw.blog.vo.params.PageParams;
 import org.joda.time.DateTime;
@@ -53,6 +50,20 @@ public class ArticleServiceImpl implements ArticleService {
          */
         Page<Article> page = new Page<>(pageParams.getPage(), pageParams.getPageSize());
         LambdaQueryWrapper<Article> queryWrapper = new LambdaQueryWrapper<>();
+        //加入tag判断，加载标签文章列表时要用到
+        if (pageParams.getTagId() != null) {
+            LambdaQueryWrapper<ArticleTag> articleTagLambdaQueryWrapper = new LambdaQueryWrapper<>();
+            articleTagLambdaQueryWrapper.eq(ArticleTag::getTagId, pageParams.getTagId());
+            articleTagLambdaQueryWrapper.select(ArticleTag::getArticleId);
+            List<ArticleTag> articleTags = articleTagService.findArticleIdsByTagid(pageParams.getTagId());
+            List<Long> articleIdList = new ArrayList<>();
+            for (ArticleTag articleTag:articleTags) {
+                articleIdList.add(articleTag.getArticleId());
+            }
+            if (articleIdList.size() > 0) {
+                queryWrapper.in(Article::getId, articleIdList);
+            }
+        }
         //排序
         queryWrapper.orderByDesc(Article::getWeight, Article::getCreateDate);
         Page<Article> articlePage = articleMapper.selectPage(page, queryWrapper);
