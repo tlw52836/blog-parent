@@ -15,6 +15,11 @@ public class LoginController {
     @Autowired
     private LoginService loginService;
 
+    /**
+     * 登录功能
+     * @param loginParams
+     * @return
+     */
     @PostMapping
     public Result login(@RequestBody LoginParams loginParams) {
         return loginService.login(loginParams);

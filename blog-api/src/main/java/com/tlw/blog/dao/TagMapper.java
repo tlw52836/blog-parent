@@ -23,5 +23,10 @@ public interface TagMapper extends BaseMapper<Tag> {
      */
     List<Long> findHotsTagIds(int limit);
 
+    /**
+     * 根据tagId查询Tag对象
+     * @param tagIds
+     * @return
+     */
     List<Tag> findTagsByTagIds(List<Long> tagIds);
 }

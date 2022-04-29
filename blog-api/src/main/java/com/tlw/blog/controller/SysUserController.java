@@ -11,6 +11,11 @@ public class SysUserController {
     @Autowired
     private SysUserService sysUserService;
 
+    /**
+     * 根据token查询用户信息
+     * @param token
+     * @return
+     */
     @GetMapping("/currentUser")
     public Result currentUser(@RequestHeader("Authorization") String token) {
         return sysUserService.findUserByToken(token);

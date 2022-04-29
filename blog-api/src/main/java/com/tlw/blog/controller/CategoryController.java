@@ -14,13 +14,21 @@ public class CategoryController {
     @Autowired
     private CategoryService categoryService;
 
+    /**
+     * 查询所有分类
+     * @return
+     */
     @GetMapping
     public Result listCategory() {
         return categoryService.findAll();
     }
 
-    @GetMapping("detail")
+    /**
+     * 查询所有分类(包括细节)
+     * @return
+     */
+    @GetMapping("/detail")
     public Result categoriesDetail(){
-        return categoryService.findAllDetail();
+        return categoryService.findAll();
     }
 }

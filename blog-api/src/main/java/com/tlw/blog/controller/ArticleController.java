@@ -20,7 +20,6 @@ public class ArticleController {
      * @param pageParams
      * @return
      */
-    //Result是统一结果返回
 
     @PostMapping
     @LogAnnotation(module = "文章", operation = "文章列表")

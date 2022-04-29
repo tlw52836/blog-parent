@@ -15,6 +15,11 @@ public class RegisterController {
     @Autowired
     private LoginService loginService;
 
+    /**
+     * 注册
+     * @param loginParams
+     * @return
+     */
     @PostMapping
     public Result register(@RequestBody LoginParams loginParams) {
         //sso 单点登录 后期把登录注册功能提出去（单独的服务，可以独立提供接口服务）
