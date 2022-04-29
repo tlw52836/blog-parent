@@ -11,7 +11,7 @@ import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 
 @Configuration
 //扫包，将此包下的接口生成代理实现类，并且注册到spring容器中
-@MapperScan("com.tlw.blog.mapper")
+@MapperScan("com.tlw.blog.dao")
 public class MybatisPlusConfig {
 
     //分页插件

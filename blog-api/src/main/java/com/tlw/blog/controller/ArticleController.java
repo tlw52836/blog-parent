@@ -1,5 +1,6 @@
 package com.tlw.blog.controller;
 
+import com.tlw.blog.common.aop.LogAnnotation;
 import com.tlw.blog.service.ArticleService;
 import com.tlw.blog.vo.params.ArticleParam;
 import com.tlw.blog.vo.params.PageParams;
@@ -20,7 +21,9 @@ public class ArticleController {
      * @return
      */
     //Result是统一结果返回
+
     @PostMapping
+    @LogAnnotation(module = "文章", operation = "文章列表")
     public Result articles(@RequestBody PageParams pageParams) {
 
         return articleService.listArticlesPage(pageParams);
