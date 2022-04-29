@@ -1,6 +1,7 @@
 package com.tlw.blog.service;
 
 import com.tlw.blog.vo.CategoryVo;
+import com.tlw.blog.vo.Result;
 
 public interface CategoryService {
     /**
@@ -9,4 +10,10 @@ public interface CategoryService {
      * @return
      */
     CategoryVo findCategoryById(Long categoryId);
+
+    /**
+     * 查询所有分类
+     * @return
+     */
+    Result findAll();
 }

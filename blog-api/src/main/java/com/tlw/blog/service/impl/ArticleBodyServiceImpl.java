@@ -20,4 +20,9 @@ public class ArticleBodyServiceImpl implements ArticleBodyService {
         BeanUtils.copyProperties(articleBody, articleBodyVo);
         return articleBodyVo;
     }
+
+    @Override
+    public void insert(ArticleBody articleBody) {
+        articleBodyMapper.insert(articleBody);
+    }
 }

@@ -2,10 +2,17 @@ package com.tlw.blog.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.tlw.blog.mapper.ArticleBodyMapper;
 import com.tlw.blog.mapper.ArticleMapper;
+import com.tlw.blog.mapper.ArticleTagMapper;
+import com.tlw.blog.mapper.pojo.ArticleBody;
+import com.tlw.blog.mapper.pojo.ArticleTag;
+import com.tlw.blog.mapper.pojo.SysUser;
 import com.tlw.blog.service.*;
+import com.tlw.blog.utils.UserThreadLocal;
 import com.tlw.blog.vo.*;
 import com.tlw.blog.mapper.pojo.Article;
+import com.tlw.blog.vo.params.ArticleParam;
 import com.tlw.blog.vo.params.PageParams;
 import org.joda.time.DateTime;
 import org.springframework.beans.BeanUtils;
@@ -35,6 +42,10 @@ public class ArticleServiceImpl implements ArticleService {
 
     @Autowired
     private ThreadService threadService;
+
+    @Autowired
+    private ArticleTagService articleTagService;
+
 
     @Override
     public Result listArticlesPage(PageParams pageParams) {
@@ -97,6 +108,52 @@ public class ArticleServiceImpl implements ArticleService {
          * 可以把阅读数更新操作扔到线程池中去执行，和主线程就相关了
          */
         threadService.updateViewCount(articleMapper, article);
+        return Result.success(articleVo);
+    }
+
+    @Override
+    public Result publish(ArticleParam articleParam) {
+        /**
+         * 1. 将此接口加入到拦截器中
+         * 2. 插入Article
+         * 3. 插入tags
+         * 4. 插入body
+         */
+
+        SysUser sysUser = UserThreadLocal.get();
+
+        Article article = new Article();
+        article.setAuthorId(sysUser.getId());
+        article.setCategoryId(articleParam.getCategory().getId());
+        article.setCreateDate(System.currentTimeMillis());
+        article.setCommentCounts(0);
+        article.setSummary(articleParam.getSummary());
+        article.setTitle(articleParam.getTitle());
+        article.setViewCounts(0);
+        article.setWeight(Article.Article_Common);
+        article.setBodyId(-1L);
+        articleMapper.insert(article);
+
+        //tags
+        List<TagVo> tags = articleParam.getTags();
+        if (tags != null) {
+            for (TagVo tag : tags) {
+                ArticleTag articleTag = new ArticleTag();
+                articleTag.setArticleId(article.getId());
+                articleTag.setTagId(tag.getId());
+                articleTagService.insert(articleTag);
+            }
+        }
+        ArticleBody articleBody = new ArticleBody();
+        articleBody.setContent(articleParam.getBody().getContent());
+        articleBody.setContentHtml(articleParam.getBody().getContentHtml());
+        articleBody.setArticleId(article.getId());
+        articleBodyService.insert(articleBody);
+
+        article.setBodyId(articleBody.getId());
+        articleMapper.updateById(article);
+        ArticleVo articleVo = new ArticleVo();
+        articleVo.setId(article.getId());
         return Result.success(articleVo);
     }
 

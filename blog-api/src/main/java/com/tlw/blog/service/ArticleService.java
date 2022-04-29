@@ -1,5 +1,6 @@
 package com.tlw.blog.service;
 
+import com.tlw.blog.vo.params.ArticleParam;
 import com.tlw.blog.vo.params.PageParams;
 import com.tlw.blog.vo.Result;
 
@@ -41,4 +42,11 @@ public interface ArticleService {
      * @return
      */
     Result findArticleById(Long articleId);
+
+    /**
+     * 发布文章
+     * @param articleParam
+     * @return
+     */
+    Result publish(ArticleParam articleParam);
 }

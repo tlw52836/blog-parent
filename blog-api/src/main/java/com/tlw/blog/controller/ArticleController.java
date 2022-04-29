@@ -1,6 +1,7 @@
 package com.tlw.blog.controller;
 
 import com.tlw.blog.service.ArticleService;
+import com.tlw.blog.vo.params.ArticleParam;
 import com.tlw.blog.vo.params.PageParams;
 import com.tlw.blog.vo.Result;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -64,6 +65,16 @@ public class ArticleController {
     @PostMapping("/view/{id}")
     public Result findArticleById(@PathVariable("id") Long articleId) {
         return articleService.findArticleById(articleId);
+    }
+
+    /**
+     * 发布文章
+     * @param articleParam
+     * @return
+     */
+    @PostMapping("/publish")
+    public Result publish(@RequestBody ArticleParam articleParam){
+        return articleService.publish(articleParam);
     }
 
 }
