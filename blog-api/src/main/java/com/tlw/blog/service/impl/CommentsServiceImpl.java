@@ -1,9 +1,9 @@
 package com.tlw.blog.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
-import com.tlw.blog.mapper.CommentMapper;
-import com.tlw.blog.mapper.pojo.Comment;
-import com.tlw.blog.mapper.pojo.SysUser;
+import com.tlw.blog.dao.CommentMapper;
+import com.tlw.blog.dao.pojo.Comment;
+import com.tlw.blog.dao.pojo.SysUser;
 import com.tlw.blog.service.CommentsService;
 import com.tlw.blog.service.SysUserService;
 import com.tlw.blog.utils.UserThreadLocal;
@@ -11,7 +11,6 @@ import com.tlw.blog.vo.CommentVo;
 import com.tlw.blog.vo.Result;
 import com.tlw.blog.vo.UserVo;
 import com.tlw.blog.vo.params.CommentParam;
-import org.apache.catalina.User;
 import org.joda.time.DateTime;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;

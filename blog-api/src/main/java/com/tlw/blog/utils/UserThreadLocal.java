@@ -1,6 +1,6 @@
 package com.tlw.blog.utils;
 
-import com.tlw.blog.mapper.pojo.SysUser;
+import com.tlw.blog.dao.pojo.SysUser;
 
 public class UserThreadLocal {
 

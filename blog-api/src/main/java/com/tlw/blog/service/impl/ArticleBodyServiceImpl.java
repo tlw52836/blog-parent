@@ -1,7 +1,7 @@
 package com.tlw.blog.service.impl;
 
-import com.tlw.blog.mapper.ArticleBodyMapper;
-import com.tlw.blog.mapper.pojo.ArticleBody;
+import com.tlw.blog.dao.ArticleBodyMapper;
+import com.tlw.blog.dao.pojo.ArticleBody;
 import com.tlw.blog.service.ArticleBodyService;
 import com.tlw.blog.vo.ArticleBodyVo;
 import org.springframework.beans.BeanUtils;

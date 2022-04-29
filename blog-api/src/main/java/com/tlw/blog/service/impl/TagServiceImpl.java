@@ -1,8 +1,8 @@
 package com.tlw.blog.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
-import com.tlw.blog.mapper.TagMapper;
-import com.tlw.blog.mapper.pojo.Tag;
+import com.tlw.blog.dao.TagMapper;
+import com.tlw.blog.dao.pojo.Tag;
 import com.tlw.blog.service.TagService;
 import com.tlw.blog.vo.Result;
 import com.tlw.blog.vo.TagVo;

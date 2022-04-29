@@ -1,8 +1,8 @@
 package com.tlw.blog.service;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
-import com.tlw.blog.mapper.ArticleMapper;
-import com.tlw.blog.mapper.pojo.Article;
+import com.tlw.blog.dao.ArticleMapper;
+import com.tlw.blog.dao.pojo.Article;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 

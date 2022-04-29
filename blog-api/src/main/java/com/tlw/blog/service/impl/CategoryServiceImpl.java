@@ -1,8 +1,8 @@
 package com.tlw.blog.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
-import com.tlw.blog.mapper.CategoryMapper;
-import com.tlw.blog.mapper.pojo.Category;
+import com.tlw.blog.dao.CategoryMapper;
+import com.tlw.blog.dao.pojo.Category;
 import com.tlw.blog.service.CategoryService;
 import com.tlw.blog.vo.CategoryVo;
 import com.tlw.blog.vo.Result;

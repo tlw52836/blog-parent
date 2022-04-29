@@ -1,7 +1,7 @@
-package com.tlw.blog.mapper;
+package com.tlw.blog.dao;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
-import com.tlw.blog.mapper.pojo.Tag;
+import com.tlw.blog.dao.pojo.Tag;
 
 import java.util.List;
 

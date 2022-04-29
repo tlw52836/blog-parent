@@ -1,7 +1,7 @@
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.tlw.blog.BlogApp;
-import com.tlw.blog.mapper.SysUserMapper;
-import com.tlw.blog.mapper.pojo.SysUser;
+import com.tlw.blog.dao.SysUserMapper;
+import com.tlw.blog.dao.pojo.SysUser;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

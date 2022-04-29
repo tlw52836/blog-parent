@@ -1,7 +1,7 @@
 package com.tlw.blog.handler;
 
 import com.alibaba.fastjson.JSON;
-import com.tlw.blog.mapper.pojo.SysUser;
+import com.tlw.blog.dao.pojo.SysUser;
 import com.tlw.blog.service.TokenService;
 import com.tlw.blog.utils.UserThreadLocal;
 import com.tlw.blog.vo.ErrorCode;

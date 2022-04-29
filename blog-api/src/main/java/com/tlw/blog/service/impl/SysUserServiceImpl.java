@@ -1,8 +1,8 @@
 package com.tlw.blog.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
-import com.tlw.blog.mapper.SysUserMapper;
-import com.tlw.blog.mapper.pojo.SysUser;
+import com.tlw.blog.dao.SysUserMapper;
+import com.tlw.blog.dao.pojo.SysUser;
 import com.tlw.blog.service.SysUserService;
 import com.tlw.blog.service.TokenService;
 import com.tlw.blog.vo.ErrorCode;
@@ -27,7 +27,7 @@ public class SysUserServiceImpl implements SysUserService {
             sysUser = new SysUser();
             sysUser.setNickname("Mr Tao");
         }
-        
+
         return sysUser;
     }
 

@@ -1,6 +1,6 @@
 package com.tlw.blog.controller;
 
-import com.tlw.blog.mapper.pojo.SysUser;
+import com.tlw.blog.dao.pojo.SysUser;
 import com.tlw.blog.utils.UserThreadLocal;
 import com.tlw.blog.vo.Result;
 import org.springframework.web.bind.annotation.RequestMapping;

@@ -1,6 +1,6 @@
 package com.tlw.blog.service;
 
-import com.tlw.blog.mapper.pojo.ArticleBody;
+import com.tlw.blog.dao.pojo.ArticleBody;
 import com.tlw.blog.vo.ArticleBodyVo;
 
 public interface ArticleBodyService {

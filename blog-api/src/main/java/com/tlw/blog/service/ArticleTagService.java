@@ -1,6 +1,6 @@
 package com.tlw.blog.service;
 
-import com.tlw.blog.mapper.pojo.ArticleTag;
+import com.tlw.blog.dao.pojo.ArticleTag;
 
 public interface ArticleTagService {
     /**

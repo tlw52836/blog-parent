@@ -1,6 +1,6 @@
 package com.tlw.blog.service;
 
-import com.tlw.blog.mapper.pojo.SysUser;
+import com.tlw.blog.dao.pojo.SysUser;
 import com.tlw.blog.vo.Result;
 
 public interface SysUserService {
