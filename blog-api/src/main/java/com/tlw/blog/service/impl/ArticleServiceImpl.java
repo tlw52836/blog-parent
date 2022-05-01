@@ -50,6 +50,11 @@ public class ArticleServiceImpl implements ArticleService {
          */
         Page<Article> page = new Page<>(pageParams.getPage(), pageParams.getPageSize());
         LambdaQueryWrapper<Article> queryWrapper = new LambdaQueryWrapper<>();
+        //加入category判断，加载文章列表时要用到
+        if (pageParams.getCategoryId() != null) {
+            queryWrapper.eq(Article::getCategoryId, pageParams.getCategoryId());
+        }
+
         //加入tag判断，加载标签文章列表时要用到
         if (pageParams.getTagId() != null) {
             LambdaQueryWrapper<ArticleTag> articleTagLambdaQueryWrapper = new LambdaQueryWrapper<>();
