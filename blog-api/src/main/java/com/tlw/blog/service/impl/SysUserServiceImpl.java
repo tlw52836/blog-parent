@@ -56,7 +56,7 @@ public class SysUserServiceImpl implements SysUserService {
 
         System.out.println("=======>" + sysUser);
         LoginUserVo loginUserVo = new LoginUserVo();
-        loginUserVo.setId(sysUser.getId());
+        loginUserVo.setId(String.valueOf(sysUser.getId()));
         loginUserVo.setAccount(sysUser.getAccount());
         loginUserVo.setNickname(sysUser.getNickname());
         loginUserVo.setAvatar(sysUser.getAvatar());

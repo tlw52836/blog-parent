@@ -1,4 +1,4 @@
-package com.tlw.blog.common.aop;
+package com.tlw.blog.common.aopLog;
 
 import com.alibaba.fastjson.JSON;
 import lombok.extern.slf4j.Slf4j;
@@ -20,7 +20,7 @@ import java.lang.reflect.Method;
 public class LogAspect {
 
 
-    @Pointcut("@annotation(com.tlw.blog.common.aop.LogAnnotation)")
+    @Pointcut("@annotation(com.tlw.blog.common.aopLog.LogAnnotation)")
     public void logPointCut() {
     }
 
