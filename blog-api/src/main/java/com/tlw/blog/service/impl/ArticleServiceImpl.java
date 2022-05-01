@@ -1,6 +1,7 @@
 package com.tlw.blog.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.tlw.blog.dao.ArticleMapper;
 import com.tlw.blog.dao.pojo.*;
@@ -42,54 +43,60 @@ public class ArticleServiceImpl implements ArticleService {
     @Autowired
     private ArticleTagService articleTagService;
 
-
     @Override
     public Result listArticlesPage(PageParams pageParams) {
-        /**
-         * 分页查询
-         */
-        Page<Article> page = new Page<>(pageParams.getPage(), pageParams.getPageSize());
-        LambdaQueryWrapper<Article> queryWrapper = new LambdaQueryWrapper<>();
-        //加入category判断，加载文章列表时要用到
-        if (pageParams.getCategoryId() != null) {
-            queryWrapper.eq(Article::getCategoryId, pageParams.getCategoryId());
-        }
-
-        //加入tag判断，加载标签文章列表时要用到
-        if (pageParams.getTagId() != null) {
-            LambdaQueryWrapper<ArticleTag> articleTagLambdaQueryWrapper = new LambdaQueryWrapper<>();
-            articleTagLambdaQueryWrapper.eq(ArticleTag::getTagId, pageParams.getTagId());
-            articleTagLambdaQueryWrapper.select(ArticleTag::getArticleId);
-            List<ArticleTag> articleTags = articleTagService.findArticleIdsByTagid(pageParams.getTagId());
-            List<Long> articleIdList = new ArrayList<>();
-            for (ArticleTag articleTag:articleTags) {
-                articleIdList.add(articleTag.getArticleId());
-            }
-            if (articleIdList.size() > 0) {
-                queryWrapper.in(Article::getId, articleIdList);
-            }
-        }
-        //排序
-        queryWrapper.orderByDesc(Article::getWeight, Article::getCreateDate);
-        Page<Article> articlePage = articleMapper.selectPage(page, queryWrapper);
-        List<Article> records = articlePage.getRecords();
-
-        List<ArticleVo>  articleVoList= copyList(records, true, true, false, false);
-
-        return Result.success(articleVoList);
+        Page<Article> page = new Page<>(pageParams.getPage(),pageParams.getPageSize());
+        IPage<Article> articleIPage = articleMapper.listArticle(page,pageParams.getCategoryId(),pageParams.getTagId(),pageParams.getYear(),pageParams.getMonth());
+        return Result.success(copyList(articleIPage.getRecords(),false));
     }
+
+//    @Override
+//    public Result listArticlesPage(PageParams pageParams) {
+//        /**
+//         * 分页查询
+//         */
+//        Page<Article> page = new Page<>(pageParams.getPage(), pageParams.getPageSize());
+//        LambdaQueryWrapper<Article> queryWrapper = new LambdaQueryWrapper<>();
+//        //加入category判断，加载文章列表时要用到
+//        if (pageParams.getCategoryId() != null) {
+//            queryWrapper.eq(Article::getCategoryId, pageParams.getCategoryId());
+//        }
+//
+//        //加入tag判断，加载标签文章列表时要用到
+//        if (pageParams.getTagId() != null) {
+//            LambdaQueryWrapper<ArticleTag> articleTagLambdaQueryWrapper = new LambdaQueryWrapper<>();
+//            articleTagLambdaQueryWrapper.eq(ArticleTag::getTagId, pageParams.getTagId());
+//            articleTagLambdaQueryWrapper.select(ArticleTag::getArticleId);
+//            List<ArticleTag> articleTags = articleTagService.findArticleIdsByTagid(pageParams.getTagId());
+//            List<Long> articleIdList = new ArrayList<>();
+//            for (ArticleTag articleTag:articleTags) {
+//                articleIdList.add(articleTag.getArticleId());
+//            }
+//            if (articleIdList.size() > 0) {
+//                queryWrapper.in(Article::getId, articleIdList);
+//            }
+//        }
+//        //排序
+//        queryWrapper.orderByDesc(Article::getWeight, Article::getCreateDate);
+//        Page<Article> articlePage = articleMapper.selectPage(page, queryWrapper);
+//        List<Article> records = articlePage.getRecords();
+//
+//        List<ArticleVo>  articleVoList= copyList(records, true, true, false, false);
+//
+//        return Result.success(articleVoList);
+//    }
 
     @Override
     public Result hotArticles(int limit) {
         //select id, title from ms_article order by view_counts desc limit 5
         LambdaQueryWrapper<Article> queryWrapper = new LambdaQueryWrapper<>();
         queryWrapper.orderByDesc(Article::getViewCounts);
-        queryWrapper.select(Article::getId, Article::getTitle);
+        //queryWrapper.select(Article::getId, Article::getTitle);
         queryWrapper.last("limit " + limit);
 
         List<Article> articles = articleMapper.selectList(queryWrapper);
 
-        return Result.success(copyList(articles, false, false, false, false));
+        return Result.success(copyList(articles, false));
     }
 
     @Override
@@ -97,12 +104,12 @@ public class ArticleServiceImpl implements ArticleService {
         //select id, title from ms_article order by create_date desc limit 5
         LambdaQueryWrapper<Article> queryWrapper = new LambdaQueryWrapper<>();
         queryWrapper.orderByDesc(Article::getCreateDate);
-        queryWrapper.select(Article::getId, Article::getTitle);
+        //queryWrapper.select(Article::getId, Article::getTitle);
         queryWrapper.last("limit " + limit);
 
         List<Article> articles = articleMapper.selectList(queryWrapper);
 
-        return Result.success(copyList(articles, false, false, false, false));
+        return Result.success(copyList(articles, false));
     }
 
     //文章归档
@@ -116,7 +123,7 @@ public class ArticleServiceImpl implements ArticleService {
     @Override
     public Result findArticleById(Long articleId) {
         Article article = articleMapper.selectById(articleId);
-        ArticleVo articleVo = copy(article, true, true, true, true);
+        ArticleVo articleVo = copy(article, true);
         /**
          * 查看文章后，新增阅读次数
          * 查看玩文章后本应该返回数据了，这时做了一个更新操作（增删改操作加写锁，查询操作加读锁），使得阅读数更新操作需要等待
@@ -173,37 +180,35 @@ public class ArticleServiceImpl implements ArticleService {
         return Result.success(articleVo);
     }
 
-    private List<ArticleVo> copyList(List<Article> records,boolean isTag, boolean isAuthor, boolean  isCategory, boolean isBody) {
+    private List<ArticleVo> copyList(List<Article> records, boolean isBody) {
         List<ArticleVo> articleVoList = new ArrayList<>();
 
         for (Article record: records) {
-            articleVoList.add(copy(record, isTag, isAuthor, isCategory, isBody));
+            articleVoList.add(copy(record, isBody));
         }
 
         return articleVoList;
     }
 
-    private ArticleVo copy(Article article, boolean isTag, boolean isAuthor, boolean  isCategory, boolean isBody) {
+    private ArticleVo copy(Article article, boolean isBody) {
         ArticleVo articleVo = new ArticleVo();
         BeanUtils.copyProperties(article, articleVo);
 
         articleVo.setCreateDate(new DateTime(article.getCreateDate()).toString("yyyy-MM-dd HH:mm"));
-        //并不是所有的接口都需要标签和作者信息的
-        if (isTag) {
-            Long articleId = article.getId();
-            articleVo.setTags(tagService.findTagsByArticleId(articleId));
-        }
+        //标签
+        Long articleId = article.getId();
+        articleVo.setTags(tagService.findTagsByArticleId(articleId));
 
-        if (isAuthor) {
-            Long authorId = article.getAuthorId();
-            articleVo.setAuthor(sysUserService.findUserById(authorId).getNickname());
-        }
+        //作者
+        Long authorId = article.getAuthorId();
+        articleVo.setAuthor(sysUserService.findUserById(authorId).getNickname());
 
-        if (isCategory) {
-            CategoryVo categoryVo = categoryService.findCategoryById(article.getCategoryId());
-            articleVo.setCategory(categoryVo);
-        }
+        System.out.println("====>" + article);
+        //类别
+        CategoryVo categoryVo = categoryService.findCategoryById(article.getCategoryId());
+        articleVo.setCategory(categoryVo);
 
+        //并不是所有的接口文章体信息
         if (isBody) {
             ArticleBodyVo articleBodyVo = articleBodyService.findArticleBodyById(article.getBodyId());
             articleVo.setBody(articleBodyVo);
